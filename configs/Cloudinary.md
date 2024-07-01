@@ -2,8 +2,10 @@
 CLOUDINARY_CLOUD_NAME=
 CLOUDINARY_KEY=
 CLOUDINARY_SECRET=
-MAPBOX_TOKEN=  <!--to view campground locations on map-->
-DB_URL=    <!--to connect to mongodb atlas database-->
+<!--to view campground locations on map-->
+MAPBOX_TOKEN=
+<!--to connect to mongodb atlas database-->
+DB_URL=
 SECRET=
 
 
