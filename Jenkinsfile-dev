@@ -1,0 +1,78 @@
+pipeline {
+    agent any
+    tools {
+        nodejs 'nodeDev'
+    }
+    environment {
+        SCANNER_HOME= tool 'sonar-dev'
+    }
+
+    stages {
+        stage('Git Checkout') {
+            steps {
+                git credentialsId: 'git-cred', url: 'https://github.com/ChetanThapliyal/YelpCampAPP.git'
+            }
+        }
+        
+        stage('Install Package Dependencies') {
+            steps {
+                sh "npm install"
+            }
+        }
+        
+        stage('Unit Tests') {
+            steps {
+                sh "npm test"
+            }
+        }
+        
+        stage('Trivy FS Scan') {
+            steps {
+                sh "trivy fs --format table -o fs-report.html ."
+            }
+        }
+        
+        stage('Sonarqube') {
+            steps {
+                sh "$SCANNER_HOME/bin/sonar-scanner -Dsonar.projectKey=Campground -Dsonar.projectName=Campground"
+            }
+        }
+        
+        stage('Build and Tag Docker Image') {
+            steps {
+                script {
+                    withDockerRegistry(credentialsId: 'docker-cred', toolName: 'docker-dev') {
+                        sh "docker image build -t che01tan/camp:latest ."
+                    }
+                }
+            }
+        }
+        
+        stage('Docker Image Scan') {
+            steps {
+                sh "trivy image --format table -o trivy-image-report.html che01tan/camp:latest"
+            }
+        }
+
+        stage('Push Docker Image') {
+            steps {
+                script {
+                    withDockerRegistry([credentialsId: 'docker-cred', toolName: 'docker-dev']) {
+                        sh "docker push che01tan/boardgame:latest"
+                    }
+                }
+            }
+        }
+        
+        stage('Docker Deployment') {
+            steps {
+                script {
+                    withDockerRegistry([credentialsId: 'docker-cred', toolName: 'docker-dev']) {
+                        sh "docker run -d -p 3000:3000 che01tan/boardgame:latest"
+                    }
+                }
+            }
+        }
+        
+    }
+}

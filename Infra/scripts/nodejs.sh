@@ -19,8 +19,6 @@ npm -v
 cd ~
 cd /opt
 git clone https://github.com/ChetanThapliyal/yelpcamp-devops-gcp-docker-gke.git
-echo "Clone complete"
-pwd
 cd yelpcamp-devops-gcp-docker-gke
 git pull
 cd src
