@@ -26,3 +26,15 @@ module "compute" {
     gcp_service_account_email  = var.gcp_service_account_email
     gcp_project_id             = var.gcp_project_id
 }
+
+module "gke_cluster" {
+    source = "../../modules/gke"
+    gcp_project_id = var.gcp_project_id
+    network_name   = data.terraform_remote_state.global.outputs.network_name
+    region         = var.region
+    cluster_name   = var.cluster_name
+    node_pool_name = var.node_pool_name
+    node_count     = var.node_count
+    machine_type   = var.machine_type
+    environment    = var.environment
+}
