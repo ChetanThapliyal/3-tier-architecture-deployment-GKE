@@ -24,10 +24,10 @@ variable "gcp_service_account_email" {
     description = "value of service account email"
 }
 
-variable "region" {
+variable "zone" {
     description = "The region to deploy resources in"
     type        = string
-    default     = "asia-south1"
+    default     = "asia-south1-a"
 }
 
 variable "cluster_name" {

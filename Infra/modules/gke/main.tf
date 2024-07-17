@@ -37,13 +37,12 @@ resource "google_project_iam_member" "gke_sa_iam_service_account_user" {
 }
 
 resource "google_container_cluster" "primary" {
-    name     = var.cluster_name
-    location = var.region
-
+    name                     = var.cluster_name
+    location                 = var.zone
+    project                  = var.gcp_project_id
     remove_default_node_pool = true
     initial_node_count       = 1
-    network       = var.network_name
-
+    network                  = var.network_name
     resource_labels = {
         environment = var.environment
         project     = var.gcp_project_id
@@ -52,9 +51,9 @@ resource "google_container_cluster" "primary" {
 
 # Creates Node Pool for GKE
 resource "google_container_node_pool" "primary_preemptible_nodes" {
-    depends_on = [ google_container_cluster.primary ]
+    depends_on = [google_container_cluster.primary]
     name       = var.node_pool_name
-    location   = var.region
+    location   = var.zone
     cluster    = google_container_cluster.primary.name
     node_count = var.node_count
     project    = var.gcp_project_id
@@ -62,20 +61,19 @@ resource "google_container_node_pool" "primary_preemptible_nodes" {
     node_config {
         preemptible  = true
         machine_type = var.machine_type
+        disk_size_gb = 50  # Added disk size parameter
         service_account = google_service_account.gke_sa.email
         oauth_scopes = [
-            "https://www.googleapis.com/auth/cloud-platform"
+        "https://www.googleapis.com/auth/cloud-platform"
         ]
-
-    labels = {
+        labels = {
         environment = var.environment
-    }
-
-    tags = ["gke-node", "my-cluster-node"]
+        }
+        tags = ["gke-node", "my-cluster-node"]
     }
 
     autoscaling {
         min_node_count = 1
-        max_node_count = 5
+        max_node_count = 2
     }
 }

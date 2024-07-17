@@ -4,7 +4,10 @@ pipeline {
         nodejs 'nodeDev'
     }
     environment {
-        SCANNER_HOME= tool 'sonar-dev'
+        SCANNER_HOME = tool 'sonar-dev'
+        PROJECT_ID = "${PROJECT_ID}"
+        CLUSTER_NAME = "${CLUSTER_NAME}"
+        LOCATION = "${LOCATION}"
     }
 
     stages {
@@ -66,15 +69,28 @@ pipeline {
             }
         }
         
-        stage('Docker Deployment') {
+        stage('Configure kubectl') {
             steps {
-                script {
-                    withDockerRegistry([credentialsId: 'docker-cred', toolName: 'docker-dev']) {
-                        sh "docker run -d -p 3000:3000 che01tan/camp:latest"
-                    }
+                withCredentials([file(credentialsId: 'gke-cred', variable: 'GOOGLE_APPLICATION_CREDENTIALS')]) {
+                    sh '''
+                        gcloud auth activate-service-account --key-file=$GOOGLE_APPLICATION_CREDENTIALS
+                        gcloud container clusters get-credentials ${CLUSTER_NAME} --zone ${LOCATION} --project ${PROJECT_ID}
+                    '''
                 }
             }
         }
-        
+
+        stage('Deploy to GKE') {
+            steps {
+                step([$class: 'KubernetesEngineBuilder', 
+                    projectId: env.PROJECT_ID, 
+                    clusterName: env.CLUSTER_NAME, 
+                    location: env.LOCATION, 
+                    manifestPattern: 'k8/deployment.yaml', 
+                    credentialsId: 'gke-cred', 
+                    verifyDeployments: true])
+                echo "Deployment Finished"
+            }
+        }
     }
 }
