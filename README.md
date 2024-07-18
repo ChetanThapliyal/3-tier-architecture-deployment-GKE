@@ -52,9 +52,4 @@ We welcome contributions to this project! Please see the `CONTRIBUTING.md` file 
 
 ## License
 
-This project is licensed under the MIT License. See the `LICENSE` file for details.
-
-**Note:**
-
-* Replace the bracketed sections with specific instructions for setting up each environment. 
-* You can add additional sections to the README for further documentation,  like project structure or how to run tests (if applicable). 
+This project is licensed under the MIT License. See the `LICENSE` file for details. 
