@@ -1,0 +1,21 @@
+title: "Jenkins GKE Viewer and Developer"
+description: "Minimal IAM role for the Jenkins GKE plugin with additional permissions for deploying and managing Kubernetes resources."
+stage: "GA"
+includedPermissions:
+- container.apiServices.get
+- container.apiServices.list
+- container.clusters.get
+- container.clusters.getCredentials
+- container.clusters.list
+- container.deployments.get
+- container.deployments.list
+- container.deployments.update
+- container.deployments.create
+- container.deployments.delete
+- container.services.get
+- container.services.list
+- container.services.update
+- container.services.create
+- container.services.delete
+- resourcemanager.projects.get
+- container.developer

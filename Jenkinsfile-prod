@@ -1,13 +1,14 @@
 pipeline {
     agent any
     tools {
-        nodejs 'nodeDev'
+        nodejs 'nodeProd'
     }
     environment {
-        SCANNER_HOME = tool 'sonar-dev'
+        SCANNER_HOME = tool 'sonar-prod'
         PROJECT_ID = "${PROJECT_ID}"
         CLUSTER_NAME = "${CLUSTER_NAME}"
         LOCATION = "${LOCATION}"
+        CREDENTIALS_ID = 'jenkins-gke-key'
     }
 
     stages {
@@ -46,7 +47,7 @@ pipeline {
         stage('Build and Tag Docker Image') {
             steps {
                 script {
-                    withDockerRegistry(credentialsId: 'docker-cred', toolName: 'docker-dev') {
+                    withDockerRegistry(credentialsId: 'docker-cred', toolName: 'docker-prod') {
                         sh "docker image build -t che01tan/camp:latest ."
                     }
                 }
@@ -62,32 +63,33 @@ pipeline {
         stage('Push Docker Image') {
             steps {
                 script {
-                    withDockerRegistry([credentialsId: 'docker-cred', toolName: 'docker-dev']) {
+                    withDockerRegistry([credentialsId: 'docker-cred', toolName: 'docker-prod']) {
                         sh "docker push che01tan/camp:latest"
                     }
                 }
             }
         }
         
-        stage('Configure kubectl') {
-            steps {
-                withCredentials([file(credentialsId: 'gke-cred', variable: 'GOOGLE_APPLICATION_CREDENTIALS')]) {
-                    sh '''
-                        gcloud auth activate-service-account --key-file=$GOOGLE_APPLICATION_CREDENTIALS
-                        gcloud container clusters get-credentials ${CLUSTER_NAME} --zone ${LOCATION} --project ${PROJECT_ID}
-                    '''
-                }
-            }
-        }
+        // stage('Configure kubectl') {
+        //     steps {
+        //         withCredentials([file(credentialsId: 'gke-cred-file', variable: 'GOOGLE_APPLICATION_CREDENTIALS')]) {
+        //             sh '''
+        //                 gcloud auth activate-service-account --key-file=$GOOGLE_APPLICATION_CREDENTIALS
+        //                 gcloud container clusters get-credentials ${CLUSTER_NAME} --zone ${LOCATION} --project ${PROJECT_ID}
+        //             '''
+        //         }
+        //     }
+        // }
 
         stage('Deploy to GKE') {
             steps {
-                step([$class: 'KubernetesEngineBuilder', 
+                step([
+                    $class: 'KubernetesEngineBuilder', 
                     projectId: env.PROJECT_ID, 
                     clusterName: env.CLUSTER_NAME, 
                     location: env.LOCATION, 
                     manifestPattern: 'k8/deployment.yaml', 
-                    credentialsId: 'gke-cred', 
+                    credentialsId: env.CREDENTIALS_ID, 
                     verifyDeployments: true])
                 echo "Deployment Finished"
             }
