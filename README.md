@@ -101,7 +101,7 @@ credentials = "path-to-your-service-account-file.json"
     terraform apply
     ```
 4. Set up a GKE cluster following the GCP documentation or the instructions in the `GKE` directory.
-5. The `GKE` directory includes a sample Jenkins pipeline that automates building, containerizing, and deploying the application to your GKE cluster.
+5. The `root` directory includes a Jenkins pipelines for both 'dev' and 'prod' environments that automates building, containerizing, and deploying the application to your GKE cluster.
 
 ## Contributing
 
