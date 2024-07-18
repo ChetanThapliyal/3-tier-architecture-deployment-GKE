@@ -103,12 +103,44 @@ credentials = "path-to-your-service-account-file.json"
 4. Set up a GKE cluster following the GCP documentation or the instructions in the `GKE` directory.
 5. The `root` directory includes a Jenkins pipelines for both 'dev' and 'prod' environments that automates building, containerizing, and deploying the application to your GKE cluster.
 
-## Contributing
+### Future Updates and Enhancements
+To keep the YelpCamp project aligned with industry best practices and to ensure its security and scalability, the following updates and enhancements are planned:
 
+1. **Binary Authorization for GKE**:
+   - Implementing Binary Authorization to ensure that only trusted container images are deployed to the GKE cluster.
+   - Enforcing policies to require image signatures and validating them against pre-approved trusted sources.
+
+2. **Federated Identity for GKE**:
+   - Integrating federated identity solutions to manage user access and authentication more effectively.
+   - Using Identity-Aware Proxy (IAP) to provide secure access to the application without a VPN, leveraging OAuth for authentication.
+
+3. **Service Mesh Implementation**:
+   - Introducing Istio or Linkerd to manage microservices traffic, increase security, and improve observability.
+   - Enabling mTLS (Mutual TLS) for secure service-to-service communication within the cluster.
+
+4. **Enhanced Monitoring and Logging**:
+   - Utilizing Prometheus and Grafana for better monitoring of the application and infrastructure.
+   - Integrating Google Cloud Logging and Google Cloud Monitoring for centralized log management and alerting.
+
+5. **Security Scanning and Compliance**:
+   - Integrating Trivy and Clair for continuous security scanning of container images.
+   - Ensuring compliance with industry standards and regulations by conducting regular security audits.
+
+6. **Automated Scaling and Load Balancing**:
+   - Configuring Horizontal Pod Autoscaler (HPA) and Cluster Autoscaler for dynamic scaling based on traffic and resource usage.
+   - Implementing Google Cloud Load Balancing to distribute traffic effectively and ensure high availability.
+
+7. **CI/CD Pipeline Enhancements**:
+   - Refining the Jenkins pipeline to include automated rollback strategies and blue-green deployments.
+   - Incorporating Canary deployments to test new features with a subset of users before full rollout.
+
+8. **Infrastructure as Code (IaC) Improvements**:
+   - Implementing Terratest for automated testing of Terraform configurations to ensure infrastructure reliability.
+
+By implementing these enhancements, the YelpCamp project will not only adhere to best practices but also provide a robust, secure, and scalable architecture for its users.
+
+## Contributing
 We welcome contributions to this project! Please see the `CONTRIBUTING.md` file for guidelines on how to contribute.
 
 ## License
-
 This project is licensed under the MIT License. See the `LICENSE` file for details.
-
-GitHub repo: [YelpCamp 3-tier architecture deployment](https://github.com/ChetanThapliyal/3-tier-architecture-deployment-GKE)  
