@@ -1,22 +1,32 @@
-# YelpCamp Cloud DevOps with GCP, Docker, and GKE
+# YelpCamp (3 tier aarchitecture) with Docker and GKE
 
-This repository demonstrates deploying a YelpCamp application (a full-stack website for campground reviews) across various environments using Cloud DevOps practices.
+This project demonstrates deploying YelpCamp application (a full-stack website for campground reviews) across various environments using Cloud DevOps practices.
 
 ## Project Goals
 
 This project aims to showcase the following functionalities:
 
-* Setting up a local development environment for YelpCamp on a GCP VM.
+* Creating 3 seperate environments (`test`, `dev`, `prod`)
+* Setting up a local development environment for testing the YelpCamp application (done on a GCP VM).
 * Building and deploying the application in a Docker container using a Jenkins pipeline.
 * Automating deployment of the application to a Google Kubernetes Engine (GKE) cluster through a Jenkins pipeline.
+* Using automation as much as possible, leverage GCP's metadata feature to install all tools using startup scripts.
 
 ## Technologies Used
 
+<p align="left">
+  <a>
+    <img src="https://skillicons.dev/icons?i=gcp,kubernetes,docker,jenkins,git,github,bash&theme=dark" width="600" height="300"/>
+    <img src="./argocd-original.svg" width="80" height="40">
+  </a>
+</p>
+
 * Google Cloud Platform (GCP)
+* Google Kubernetes Engine (GKE)
 * Docker
 * Jenkins
 * Kubernetes
-* (Add any other technologies used in your project)
+* 
 
 ## Getting Started
 
