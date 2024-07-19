@@ -32,7 +32,7 @@ cloudresourcemanager.googleapis.com \
 
 ### Configure target GKE cluster
 
-1. If necessary, create your GKE cluster:
+1. If necessary, create your GKE cluster: (# In this project we are creating clluster using terraform so skip this step)
     ```bash
     gcloud container clusters create $CLUSTER --zone $ZONE
     ```
