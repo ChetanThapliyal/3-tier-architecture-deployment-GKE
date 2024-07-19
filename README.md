@@ -97,8 +97,7 @@ credentials = "path-to-your-service-account-file.json"
     terraform init
     terraform apply
     ```
-4. Configure Jenkins following the instructions in the `Jenkins` directory.
-5. The `Jenkins` directory includes a sample Jenkins pipeline that automates building and deploying the application in a Docker container.
+4. Configure Jenkins following the instructions in the [Jenkins](https://github.com/ChetanThapliyal/3-tier-architecture-deployment-GKE/tree/main/configs/Jenkins) directory.
 
 **Prod Environment: GKE Deployment with Jenkins**
 
@@ -112,8 +111,8 @@ credentials = "path-to-your-service-account-file.json"
     terraform init
     terraform apply
     ```
-4. Set up a GKE cluster following the GCP documentation or the instructions in the `GKE` directory.
-5. The `root` directory includes a Jenkins pipelines for both 'dev' and 'prod' environments that automates building, containerizing, and deploying the application to your GKE cluster.
+4. Set up a GKE cluster following the GCP documentation or the instructions in the [GKE](https://github.com/ChetanThapliyal/3-tier-architecture-deployment-GKE/tree/main/configs/GKE) directory.
+5. The `root` directory includes Jenkins pipelines for both 'dev' and 'prod' environments that automate building, containerizing, and deploying the application to your GKE cluster.
 
 ### Future Updates and Enhancements
 To keep the YelpCamp project aligned with industry best practices and to ensure its security and scalability, the following updates and enhancements are planned:
