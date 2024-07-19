@@ -5,35 +5,48 @@ resource "google_service_account" "gke_sa" {
     project      = var.gcp_project_id
 }
 
-# Creates IAM Member for GKE Service Account
-resource "google_project_iam_member" "gke_sa_iam" {
-    project = var.gcp_project_id
-    role    = "roles/container.nodeServiceAccount"
-    member  = "serviceAccount:${google_service_account.gke_sa.email}"
+# Create Custom IAM Role
+resource "google_project_iam_custom_role" "gke_deployer_role" {
+    role_id     = "gke_deployer"
+    title       = "Jenkins GKE Viewer and Developer"
+    description = "Minimal IAM role for the Jenkins GKE plugin with additional permissions for deploying and managing Kubernetes resources."
+    project     = var.gcp_project_id
+
+    permissions = [
+        "container.apiServices.get",
+        "container.apiServices.list",
+        "container.clusters.get",
+        "container.clusters.getCredentials",
+        "container.clusters.list",
+        "container.deployments.get",
+        "container.deployments.list",
+        "container.deployments.update",
+        "container.deployments.create",
+        "container.deployments.delete",
+        "container.services.get",
+        "container.services.list",
+        "container.services.update",
+        "container.services.create",
+        "container.services.delete",
+        "resourcemanager.projects.get",
+        "container.developer"
+    ]
 }
 
-resource "google_project_iam_member" "gke_sa_container_admin" {
+# Grant IAM roles to the Service Account
+resource "google_project_iam_binding" "gke_sa_roles" {
     project = var.gcp_project_id
-    role    = "roles/container.admin"
-    member  = "serviceAccount:${google_service_account.gke_sa.email}"
-}
-
-resource "google_project_iam_member" "gke_sa_compute_viewer" {
-    project = var.gcp_project_id
-    role    = "roles/compute.viewer"
-    member  = "serviceAccount:${google_service_account.gke_sa.email}"
-}
-
-resource "google_project_iam_member" "gke_sa_storage_admin" {
-    project = var.gcp_project_id
-    role    = "roles/storage.admin"
-    member  = "serviceAccount:${google_service_account.gke_sa.email}"
-}
-
-resource "google_project_iam_member" "gke_sa_iam_service_account_user" {
-    project = var.gcp_project_id
-    role    = "roles/iam.serviceAccountUser"
-    member  = "serviceAccount:${google_service_account.gke_sa.email}"
+    role    = [
+        "roles/container.nodeServiceAccount",
+        "roles/container.admin",
+        "roles/compute.viewer",
+        "roles/storage.admin",
+        "roles/iam.serviceAccountUser",
+        "projects/${var.gcp_project_id}/roles/gke_deployer"
+    ]
+    members = [
+        "serviceAccount:${google_service_account.gke_sa.email}"
+    ]
 }
 
 resource "google_container_cluster" "primary" {
@@ -74,6 +87,6 @@ resource "google_container_node_pool" "primary_preemptible_nodes" {
 
     autoscaling {
         min_node_count = 1
-        max_node_count = 2
+        max_node_count = 4
     }
 }
